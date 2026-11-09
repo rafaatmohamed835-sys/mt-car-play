@@ -1,13 +1,18 @@
 {
-  "background_color": "#ffffff",
-  "dir": "ltr",
-  "display": "standalone",
   "name": "MT CAR PLAY",
-  "orientation": "any",
-  "scope": "/",
-  "short_name": "bitter-union-9336.rafaatmohamed835.workers",
-  "start_url": "/",
+  "short_name": "MT CAR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101827",
   "theme_color": "#101827",
-  "id": "mt-car-play",
-  "description": "سوق السيارات للبيع والشراء في مصر"
+  "description": "سوق السيارات للبيع والشراء في مصر",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
 }
