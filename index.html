@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<link rel="manifest" href="./manifest.json">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827"><title>MT CAR PLAY | سوق السيارات</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6fa;color:#172033;font-family:Tahoma,Arial,sans-serif}
+header{background:linear-gradient(120deg,#101827,#26364e);color:white;padding:22px 16px 30px}.wrap{max-width:1080px;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center}.brand{font-size:23px;font-weight:900}.brand span{color:#e0ad45}.tag{font-size:12px;color:#d6deea}
+.hero{padding:34px 0 12px}.hero h1{font-size:clamp(25px,5vw,40px);margin:0 0 10px}.hero p{color:#d6deea;line-height:1.8;margin:0}
+.filters{background:white;margin:-16px 16px 24px;padding:14px;border-radius:16px;box-shadow:0 8px 28px #15223812;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,select{width:100%;padding:13px;border:1px solid #e5e9f0;border-radius:10px;background:white;font:inherit;min-width:0}
+.section{padding:0 16px 40px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}h2{font-size:21px;margin:0}.count{font-size:13px;color:#687386}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{background:white;border:1px solid #e5e9f0;border-radius:15px;overflow:hidden}
+.photo{height:175px;background:linear-gradient(135deg,#dce3ec,#f3f5f8);display:flex;align-items:center;justify-content:center;color:#7b8798;font-size:14px}.photo img{width:100%;height:100%;object-fit:cover}
+.body{padding:14px}.name{font-size:18px;font-weight:800;margin-bottom:8px}.price{font-size:20px;color:#a66e08;font-weight:900;margin-bottom:10px}
+.meta{display:flex;flex-wrap:wrap;gap:7px;color:#687386;font-size:12px}.desc{font-size:13px;line-height:1.7;color:#596579;margin:10px 0 0}
+.status{text-align:center;background:white;border:1px solid #e5e9f0;border-radius:14px;padding:22px;color:#687386;line-height:1.8}
+footer{text-align:center;color:#687386;font-size:12px;padding:22px}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.photo{height:145px}}
+@media(max-width:480px){.grid,.filters{grid-template-columns:1fr}.photo{height:190px}.brand{font-size:20px}}
+</style></head>
+<body>
+<header><div class="wrap"><div class="top"><div class="brand">MT <span>CAR PLAY</span></div><div class="tag">سوق السيارات في مصر</div></div>
+<div class="hero"><h1>عربيتك الجاية هتلاقيها هنا</h1><p>تصفح السيارات المعروضة للبيع في مكان واحد، وابحث حسب الماركة والسعر والموديل.</p></div></div></header>
+<div class="wrap">
+<section class="section" style="padding-top:20px;padding-bottom:20px">
+  <button id="toggleAddForm" type="button" style="width:100%;padding:15px;border:0;border-radius:12px;background:#d9a63e;color:#101827;font:inherit;font-weight:800;cursor:pointer">＋ أضف سيارتك</button>
+  <form id="addCarForm" hidden style="margin-top:14px;background:#fff;padding:16px;border:1px solid #e5e9f0;border-radius:15px;display:grid;gap:10px">
+    <h2>إضافة إعلان سيارة</h2>
+    <input name="brand" placeholder="ماركة السيارة (مثال: Nissan)" required>
+    <input name="model" placeholder="الموديل (مثال: Qashqai)" required>
+    <input name="year" type="number" min="1950" max="2100" placeholder="سنة الصنع" required>
+    <input name="price" type="number" min="1" placeholder="السعر بالجنيه" required>
+    <input name="mileage" type="number" min="0" placeholder="عداد الكيلومترات">
+    <select name="transmission"><option value="">نوع الفتيس</option><option>أوتوماتيك</option><option>مانيوال</option></select>
+    <select name="fuel_type"><option value="">نوع الوقود</option><option>بنزين</option><option>سولار</option><option>غاز</option><option>هايبرد</option><option>كهرباء</option></select>
+    <label style="display:grid;gap:8px;font-weight:700">صورة السيارة من الموبايل <input id="carPhoto" type="file" accept="image/*" style="padding:10px;background:#f8fafc"></label><img id="photoPreview" alt="معاينة صورة السيارة" hidden style="width:100%;max-height:220px;object-fit:contain;border-radius:10px;background:#f1f4f8">
+    <input name="description" placeholder="وصف السيارة (اختياري)">
+    <button id="submitCar" type="submit" style="padding:14px;border:0;border-radius:10px;background:#172b46;color:white;font:inherit;font-weight:800">نشر الإعلان</button>
+    <p id="formMessage" role="status" style="margin:0;line-height:1.7"></p>
+  </form>
+</section>
+<div class="wrap"><div class="filters">
+<input id="search" type="search" placeholder="ابحث عن ماركة أو موديل..."><select id="brand"><option value="">كل الماركات</option></select>
+<input id="min" type="number" min="0" placeholder="أقل سعر بالجنيه"><input id="max" type="number" min="0" placeholder="أعلى سعر بالجنيه">
+</div><main class="section"><div class="section-head"><h2>السيارات المعروضة</h2><span class="count" id="count">جاري تحميل السيارات...</span></div>
+<div id="status" class="status">جاري الاتصال بقاعدة البيانات...</div><div id="cars" class="grid"></div></main></div>
+<footer>© <span id="year"></span> MT CAR PLAY — جميع الحقوق محفوظة</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://dbewkjlumvjdmhxswqdq.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_1QUEqPBeRu0c7-eLIsv15g_YAVHclG7";
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const carsEl=document.getElementById('cars'),statusEl=document.getElementById('status'),countEl=document.getElementById('count');
+let allCars=[];document.getElementById('year').textContent=new Date().getFullYear();
+const money=n=>Number(n||0).toLocaleString('ar-EG')+' جنيه';
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function render(){
+const q=document.getElementById('search').value.trim().toLowerCase(),b=document.getElementById('brand').value;
+const min=Number(document.getElementById('min').value||0),max=Number(document.getElementById('max').value||Infinity);
+const rows=allCars.filter(c=>(!q||(`${c.brand||''} ${c.model||''}`).toLowerCase().includes(q))&&(!b||c.brand===b)&&Number(c.price||0)>=min&&Number(c.price||0)<=max);
+countEl.textContent=rows.length+' سيارة';
+carsEl.innerHTML=rows.map(c=>{const title=esc(c.brand)+' '+esc(c.model);const photo=c.image_url?`<img src="${esc(c.image_url)}" alt="${title}" onerror="this.parentElement.textContent='لا توجد صورة'">`:'لا توجد صورة';
+return `<article class="card"><div class="photo">${photo}</div><div class="body"><div class="name">${title}</div><div class="price">${money(c.price)}</div><div class="meta"><span>${esc(c.year||'—')}</span><span>•</span><span>${esc(c.transmission||'—')}</span><span>•</span><span>${Number(c.mileage||0).toLocaleString('ar-EG')} كم</span></div><p class="desc">${esc(c.description||'')}</p></div></article>`}).join('');
+statusEl.style.display=rows.length?'none':'block';statusEl.textContent=allCars.length?'لا توجد سيارات تطابق البحث.':'لا توجد سيارات مضافة حتى الآن.';
+}
+async function loadCars(){
+const {data,error}=await client.from('cars').select('id,brand,model,year,price,transmission,fuel_type,mileage,image_url,description').order('created_at',{ascending:false});
+if(error){statusEl.textContent='تعذر تحميل السيارات. راجع صلاحيات جدول cars في Supabase.';countEl.textContent='حدث خطأ';console.error(error);return;}
+allCars=data||[];const brands=[...new Set(allCars.map(c=>c.brand).filter(Boolean))].sort();
+document.getElementById('brand').innerHTML='<option value="">كل الماركات</option>'+brands.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');render();
+}
+['search','brand','min','max'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+
+const addForm=document.getElementById('addCarForm');
+const formMessage=document.getElementById('formMessage');
+const photoInput=document.getElementById('carPhoto');
+const photoPreview=document.getElementById('photoPreview');
+let selectedPhoto=null;
+photoInput.addEventListener('change',()=>{
+  selectedPhoto=photoInput.files&&photoInput.files[0]?photoInput.files[0]:null;
+  if(selectedPhoto){
+    photoPreview.src=URL.createObjectURL(selectedPhoto);
+    photoPreview.hidden=false;
+  }else{
+    photoPreview.removeAttribute('src');
+    photoPreview.hidden=true;
+  }
+});
+document.getElementById('toggleAddForm').addEventListener('click',()=>{
+  addForm.hidden=!addForm.hidden;
+  if(!addForm.hidden) addForm.scrollIntoView({behavior:'smooth',block:'start'});
+});
+addForm.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const button=document.getElementById('submitCar');
+  const f=new FormData(addForm);
+  const row={
+    brand:String(f.get('brand')||'').trim(),
+    model:String(f.get('model')||'').trim(),
+    year:Number(f.get('year')),
+    price:Number(f.get('price')),
+    mileage:Number(f.get('mileage')||0),
+    transmission:String(f.get('transmission')||''),
+    fuel_type:String(f.get('fuel_type')||''),
+    image_url:null,
+    description:String(f.get('description')||'').trim()
+  };
+  if(!row.brand||!row.model||!row.year||!row.price){formMessage.textContent='من فضلك أكمل الماركة والموديل والسنة والسعر.';return;}
+  button.disabled=true;button.textContent='جارٍ نشر الإعلان...';formMessage.textContent='';
+  if(selectedPhoto){
+    if(!selectedPhoto.type.startsWith('image/')){
+      formMessage.textContent='اختار ملف صورة صالح.';
+      button.disabled=false;button.textContent='نشر الإعلان';return;
+    }
+    if(selectedPhoto.size>5*1024*1024){
+      formMessage.textContent='حجم الصورة أكبر من 5 ميجابايت. اختار صورة أصغر.';
+      button.disabled=false;button.textContent='نشر الإعلان';return;
+    }
+    const safeName=selectedPhoto.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    const photoPath=Date.now()+'-'+safeName;
+    const {error:uploadError}=await client.storage.from('car-images').upload(photoPath,selectedPhoto,{upsert:false,contentType:selectedPhoto.type});
+    if(uploadError){
+      formMessage.textContent='تعذر رفع الصورة. تأكد من إنشاء Bucket باسم car-images وجعله Public وضبط صلاحيات الرفع في Supabase Storage. التفاصيل: '+uploadError.message;
+      button.disabled=false;button.textContent='نشر الإعلان';return;
+    }
+    const {data:publicData}=client.storage.from('car-images').getPublicUrl(photoPath);
+    row.image_url=publicData.publicUrl;
+  }
+  const {error}=await client.from('cars').insert(row);
+  if(error){
+    formMessage.textContent='لم يتم نشر الإعلان. قد تحتاج صلاحية INSERT لجدول cars في Supabase. التفاصيل: '+error.message;
+    button.disabled=false;button.textContent='نشر الإعلان';return;
+  }
+  addForm.reset();selectedPhoto=null;photoPreview.removeAttribute('src');photoPreview.hidden=true;formMessage.textContent='تم نشر إعلانك بنجاح.';
+  button.disabled=false;button.textContent='نشر الإعلان';
+  await loadCars();
+});
+loadCars();
+</script></body></html>
