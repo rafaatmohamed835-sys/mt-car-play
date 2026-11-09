@@ -2,17 +2,20 @@
   "name": "MT CAR PLAY",
   "short_name": "MT CAR",
   "start_url": "./",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#101827",
   "theme_color": "#101827",
-  "description": "سوق السيارات للبيع والشراء في مصر",
+  "description": "سوق السيارات للبيع والشراء",
   "icons": [
     {
       "src": "./icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     }
   ]
 }

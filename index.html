@@ -36,7 +36,8 @@ footer{text-align:center;color:#687386;font-size:12px;padding:22px}
     <input name="mileage" type="number" min="0" placeholder="عداد الكيلومترات">
     <select name="transmission"><option value="">نوع الفتيس</option><option>أوتوماتيك</option><option>مانيوال</option></select>
     <select name="fuel_type"><option value="">نوع الوقود</option><option>بنزين</option><option>سولار</option><option>غاز</option><option>هايبرد</option><option>كهرباء</option></select>
-    <label style="display:grid;gap:8px;font-weight:700">صورة السيارة من الموبايل <input id="carPhoto" type="file" accept="image/*" style="padding:10px;background:#f8fafc"></label><img id="photoPreview" alt="معاينة صورة السيارة" hidden style="width:100%;max-height:220px;object-fit:contain;border-radius:10px;background:#f1f4f8">
+<input id="carPhoto" type="file" accept="image/*" style="padding:10px;background:#f8fafc">
+<img id="photoPreview" alt="معاينة صورة السيارة" hidden style="width:100%;max-height:220px;object-fit:contain;border-radius:10px;background:#f1f4f8">
     <input name="description" placeholder="وصف السيارة (اختياري)">
     <button id="submitCar" type="submit" style="padding:14px;border:0;border-radius:10px;background:#172b46;color:white;font:inherit;font-weight:800">نشر الإعلان</button>
     <p id="formMessage" role="status" style="margin:0;line-height:1.7"></p>
@@ -139,4 +140,11 @@ addForm.addEventListener('submit',async e=>{
   await loadCars();
 });
 loadCars();
-</script></body></html>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js");
+  });
+}
+</script>
+</body>
+</html>
